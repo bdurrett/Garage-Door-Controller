@@ -1,0 +1,89 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+# https://metacpan.org/pod/release/COOK/Device-SerialPort-0.11/SerialPort.pm
+use Device::SerialPort;
+
+# Serial port needs permissions - setup sudo
+# www-data ALL=(root) NOPASSWD: /var/www/html/garage/garageinterface
+
+my $serial = '/dev/ttyACM0';
+
+my $get_status = 0;
+my $press_door_button = 0;
+my @commands = ();
+
+my $numArgs = $#ARGV + 1;
+
+if( ( $numArgs == 0 ) ){
+	usage();
+	exit;
+}
+
+for(my $i = 0; $i < $numArgs; $i++ ){
+	my $param = $ARGV[$i];
+	
+	if( $param eq '--status' ){
+		$get_status = 1;
+	}
+	if( $param eq '--press-door-button' ){
+		$press_door_button = 1;
+	}
+	else{
+		push @commands, $param;
+	}
+}
+
+my $port = Device::SerialPort->new( $serial );
+if( not $port ){
+	die "Could not open serial $serial port";
+}
+$port->baudrate( 9600 ); 
+$port->databits( 8 );
+$port->parity( "none" );
+$port->stopbits( 1 );
+
+$port->write( "\r\n" );
+
+if( $press_door_button ){
+	wait_for_prompt();
+	execute_command( "REL1.ON" );
+	wait_for_prompt();
+	execute_command( "REL1.OFF" );
+}
+
+foreach my $command( @commands ){
+	wait_for_prompt();
+	print "Issuing command $command\n";
+	execute_command( $command );
+}
+
+sub execute_command{
+	my ($command) = @_;
+
+	$port->write( $command . "\r\n" );
+}
+
+sub wait_for_prompt{
+	my $got_prompt = 0;
+	while( not $got_prompt ) {
+	    my $char = $port->lookfor();
+	    if ($char) {
+		print "Received character: $char \n";
+		$got_prompt = 1;
+	    }
+	    $port->lookclear; # needed to prevent blocking
+	    sleep (1);
+	}
+}
+
+sub usage{
+	my $prog = $0;
+	$prog =~ s/^.*\///;
+	print "Usage: $prog command\n\n";
+	print "  Interface for CanaKit UK1104 relay\n\n";
+	print "  --press-door-button issue the equivalent of a door button press\n";
+	print "  --status show status\n";
+	print "\n";
+}
