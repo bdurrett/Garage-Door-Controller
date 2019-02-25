@@ -22,14 +22,13 @@
     <div style="width: 50%; margin: auto; text-align: center">
       <div>
 	    <h1> HoT Garage Door </h1>
-	    <div> <a href="open-door.php" class="button primary fit">Garage Door
-	        Button</a> </div>
+      <div> <a href="open-door.php" class="button primary fit">Garage Door Button</a> </div>
+      <br>
+      <div> <a href="#" class="button primary fit disabled">Vacation Lock</a> </div>
 	    <p><br>
 	    </p>
-	    <a href="open-door.php">OPEN DOOR</a>
 	    <p>Debug: The relay status is: </p>
 	    <?php echo "unknown" ?>
-
   		</div>
   	</div>
 

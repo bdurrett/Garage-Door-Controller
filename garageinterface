@@ -47,14 +47,14 @@ $port->stopbits( 1 );
 $port->write( "\r\n" );
 
 if( $press_door_button ){
-	wait_for_prompt();
+	wait_for_prompt( 0 );
 	execute_command( "REL1.ON" );
-	wait_for_prompt();
+	wait_for_prompt( 0 );
 	execute_command( "REL1.OFF" );
 }
 
 foreach my $command( @commands ){
-	wait_for_prompt();
+	wait_for_prompt( 0 );
 	print "Issuing command $command\n";
 	execute_command( $command );
 }
@@ -63,19 +63,27 @@ sub execute_command{
 	my ($command) = @_;
 
 	$port->write( $command . "\r\n" );
+	wait_for_prompt( 0 );
 }
 
+# Param: max # seconds to wait
 sub wait_for_prompt{
-	my $got_prompt = 0;
-	while( not $got_prompt ) {
-	    my $char = $port->lookfor();
-	    if ($char) {
-		print "Received character: $char \n";
-		$got_prompt = 1;
+	my ( $max_wait ) = @_;
+
+	my $buffer = '';
+	my $waited = 0;
+	while( $waited++ <= $max_wait ) {
+	    # my $char = $port->lookfor();
+	    my $chars;
+	    while ( $chars = $port->lookfor() ) {
+			print "Received characters: $chars \n";
+			$buffer = $buffer . $chars;
+			$waited = 0;
 	    }
 	    $port->lookclear; # needed to prevent blocking
 	    sleep (1);
 	}
+	print "Buffer: $buffer\n";
 }
 
 sub usage{
