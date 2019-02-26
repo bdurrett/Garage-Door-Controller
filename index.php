@@ -17,12 +17,58 @@
 	<meta name="msapplication-TileColor" content="#da532c">
 	<meta name="theme-color" content="#ffffff">
 
+
+<style>
+#overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 2;
+  cursor: pointer;
+}
+
+#text{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 50px;
+  color: white;
+  transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+}
+  </style>
+
+
   </head>
   <body>
+
+<script>
+
+function spinner() {
+  document.getElementById("garage-door-button").className = "button primary fit disabled";
+  document.getElementById("overlay").style.display = "block";
+}
+
+</script>
+
+
+
+
+<div id="overlay" onclick="off()">
+  <div id="text"><img src="images/lg.ajax-spinner-gif.gif"></div>
+</div>
+
+
     <div style="width: 50%; margin: auto; text-align: center">
       <div>
 	    <h1> HoT Garage Door </h1>
-      <div> <a href="open-door.php" class="button primary fit">Garage Door Button</a> </div>
+      <div> <a id='garage-door-button' href="open-door.php" class="button primary fit"  onclick="spinner()">Garage Door Button</a> </div>
       <br>
       <div> <a href="#" class="button primary fit disabled">Vacation Lock</a> </div>
 	    <p><br>
