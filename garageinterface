@@ -4,6 +4,7 @@ use warnings;
 
 # https://metacpan.org/pod/release/COOK/Device-SerialPort-0.11/SerialPort.pm
 use Device::SerialPort;
+use Time::HiRes qw( clock );
 
 # Serial port needs permissions - setup sudo
 # www-data ALL=(root) NOPASSWD: /var/www/html/garage/garageinterface
@@ -47,14 +48,14 @@ $port->stopbits( 1 );
 $port->write( "\r\n" );
 
 if( $press_door_button ){
-	wait_for_prompt( 0 );
+	wait_for_prompt( 0.5 );
 	execute_command( "REL1.ON" );
-	wait_for_prompt( 0 );
+  	Time::HiRes::sleep ( 0.5 );
 	execute_command( "REL1.OFF" );
 }
 
 foreach my $command( @commands ){
-	wait_for_prompt( 0 );
+	wait_for_prompt( 0.5 );
 	print "Issuing command $command\n";
 	execute_command( $command );
 }
@@ -63,25 +64,23 @@ sub execute_command{
 	my ($command) = @_;
 
 	$port->write( $command . "\r\n" );
-	wait_for_prompt( 0 );
+	wait_for_prompt( 0.5 );
 }
 
-# Param: max # seconds to wait
+# Param: max # seconds (can be fractional) to sleep
 sub wait_for_prompt{
 	my ( $max_wait ) = @_;
-
 	my $buffer = '';
-	my $waited = 0;
-	while( $waited++ <= $max_wait ) {
+
+  	my $start_time = clock();
+	while( ( ! $buffer ) && ( clock() - $start_time < $max_wait ) ) {
 	    # my $char = $port->lookfor();
 	    my $chars;
 	    while ( $chars = $port->lookfor() ) {
 			print "Received characters: $chars \n";
 			$buffer = $buffer . $chars;
-			$waited = 0;
 	    }
 	    $port->lookclear; # needed to prevent blocking
-	    sleep (1);
 	}
 	print "Buffer: $buffer\n";
 }
