@@ -1,5 +1,9 @@
 # Garage-Door-Controller
 
+Details on this project are at:
+
+https://brett.durrett.net/make-an-antique-garage-door-opener-internet-capable/
+
 I have an early 1990's garage door opener that does all of the things you need a garage
 door opener to do (it... opens the garage door). However, the remotes are the size of
 cinder blocks and I never have one with me when I need it, so I decided to find a way to 
@@ -29,6 +33,8 @@ On Ubuntu / Debian: `sudo apt-get install libdevice-serialport-perl`
 To make the serial interface accessible, you need to make the serial port accessible
 by the web user or grant sudo access to the script. Use `visudo` and add this line:
 `www-data ALL=(root) NOPASSWD: /var/www/html/garage/garageinterface`
+
+Make sure the file garageinterface is executable, `chmod a+x garageinterface`
 
 ## Credits
 
