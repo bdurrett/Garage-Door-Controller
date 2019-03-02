@@ -1,3 +1,11 @@
 
+# Local deploy script
+deploy
+
 # Mac crap 
 .DS_Store
+
+# Crap in the directory that isn't useful to others
+elements.html
+template-index.html
+templated-industrious.zip

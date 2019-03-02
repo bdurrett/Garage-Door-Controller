@@ -1,4 +1,17 @@
-# Image Credits
+# Credits
+
+Many thanks to my wife Stephanie, for putting up with years of me (unnecessarily) connecting
+all the things to a network.
+
+The CSS theme is Industrious, the source is https://templated.co/industrious
+
+Some unused assets were removed from the theme to save space.
+
+The CanaKit UK1104 manual is online here: https://www.canakit.com/Media/Manuals/UK1104.pdf
+
+# Original Credits from Industrious Theme
+
+## Image Credits
 
 All images courtesy of Unsplash (https://unsplash.com).
 
@@ -8,6 +21,6 @@ All images courtesy of Unsplash (https://unsplash.com).
 - Michael Dam (https://unsplash.com/photos/mEZ3PoFGs_k)
 - rawpixel.com (https://unsplash.com/photos/izTZ-TtdwCs)
 
-# Video Credits
+## Video Credits
 
 Video courtesy of Coverr (http://coverr.co).

@@ -3,15 +3,18 @@ use strict;
 use warnings;
 
 # https://metacpan.org/pod/release/COOK/Device-SerialPort-0.11/SerialPort.pm
+# apt-get install libdevice-serialport-perl
 use Device::SerialPort;
 use Time::HiRes qw( clock );
 
 # Serial port needs permissions - setup sudo
 # www-data ALL=(root) NOPASSWD: /var/www/html/garage/garageinterface
-
 my $serial = '/dev/ttyACM0';
 
-my $get_status = 0;
+# CanaKit UK1104 manual: https://www.canakit.com/Media/Manuals/UK1104.pdf
+# Relay on the CanaKit UK1104 board is connected to garage door
+my $relay = 'REL1';
+
 my $press_door_button = 0;
 my @commands = ();
 
@@ -25,9 +28,6 @@ if( ( $numArgs == 0 ) ){
 for(my $i = 0; $i < $numArgs; $i++ ){
 	my $param = $ARGV[$i];
 	
-	if( $param eq '--status' ){
-		$get_status = 1;
-	}
 	if( $param eq '--press-door-button' ){
 		$press_door_button = 1;
 	}
@@ -49,9 +49,9 @@ $port->write( "\r\n" );
 
 if( $press_door_button ){
 	wait_for_prompt( 0.5 );
-	execute_command( "REL1.ON" );
+	execute_command( $relay . '.ON' );
   	Time::HiRes::sleep ( 0.5 );
-	execute_command( "REL1.OFF" );
+	execute_command( $relay . '.OFF' );
 }
 
 foreach my $command( @commands ){
@@ -88,9 +88,9 @@ sub wait_for_prompt{
 sub usage{
 	my $prog = $0;
 	$prog =~ s/^.*\///;
-	print "Usage: $prog command\n\n";
+	print "Usage: $prog [COMMAND | --press-door-button]\n\n";
 	print "  Interface for CanaKit UK1104 relay\n\n";
-	print "  --press-door-button issue the equivalent of a door button press\n";
-	print "  --status show status\n";
+	print "  COMMAND is the command to pass directly to the relay board\n";
+	print "  --press-door-button issues the equivalent of a door button press\n";
 	print "\n";
 }
