@@ -31,7 +31,8 @@ uses the package *Device::SerialPort*.
 On Ubuntu / Debian: `sudo apt-get install libdevice-serialport-perl`
 
 To make the serial interface accessible, you need to make the serial port accessible
-by the web user or grant sudo access to the script. Use `visudo` and add this line:
+by the web user or grant sudo access to the script. You can add the web user `www-data` to the
+`dialout` group, or if you want something a little less secure, use `visudo` and add this line:
 `www-data ALL=(root) NOPASSWD: /var/www/html/garage/garageinterface`
 
 Make sure the file garageinterface is executable, `chmod a+x garageinterface`
